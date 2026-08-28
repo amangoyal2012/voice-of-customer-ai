@@ -1,0 +1,10 @@
+streamlit
+pandas
+openpyxl
+matplotlib
+requests
+langchain_community
+transformers
+torch
+torchvision
+nltk

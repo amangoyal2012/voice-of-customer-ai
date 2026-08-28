@@ -38,25 +38,27 @@ Customer Data
 
 ## 🛠️ Technology Stack
 
-- Frontend: React.js / Next.js
-- Backend: Node.js / Python
-- AI Framework: LangChain
-- LLM: OpenAI / Ollama (Llama 3.1)
-- Visualization: Chart.js / Power BI
+- Language: Python
+- AI Framework: LangChain (`langchain_community`)
+- LLM: Ollama (`llama3.2:1b`), runnable locally — can be swapped for OpenAI
+- Sentiment Analysis: Hugging Face `transformers` (DistilBERT `sst-2-english`)
+- Data Processing: pandas, openpyxl
+- UI / Visualization: Streamlit, Matplotlib
 
 ## 📂 Project Structure
 
 ```text
-genai-customer-intelligence/
+voice-of-customer-ai/
 │
-├── frontend/
-├── backend/
-├── data/
-├── models/
-├── services/
-├── docs/
-├── screenshots/
-├── tests/
+├── data/                                  # Raw customer review data
+│   └── raw_extracted_data.xlsx
+├── notebook/                              # Notebook pipeline
+│   └── genAI_Customer_Intelligence.ipynb  # raw data -> summary/sentiment/tag/recommendation pipeline
+├── src/                                   # Streamlit apps
+│   ├── Insight_Analyzer_App.py            # All-in-one Streamlit app (raw upload -> pipeline -> dashboard)
+│   └── Dashboard.py                       # Visualization-only Streamlit dashboard (pre-processed data)
+├── output/                                # Generated summaries produced by the pipeline
+│   └── genAI_Customer_Reviews_Summaries.csv
 ├── README.md
 └── requirements.txt
 ```
@@ -101,30 +103,60 @@ Track customer perception and sentiment trends over time.
 ## ⚙️ Installation
 
 ```bash
-git clone https://github.com/your-username/genai-customer-intelligence.git
-
-cd genai-customer-intelligence
-
-npm install
-```
-
-or
-
-```bash
 pip install -r requirements.txt
 ```
 
-## ▶️ Running the Application
+See **How to Use This Implementation** below for the full setup (including Ollama) and how to run each piece.
 
-```bash
-npm start
+## 🧩 How to Use This Implementation
+
+This repo contains a working implementation of the platform above, built with Python, [LangChain](https://python.langchain.com/)/[Ollama](https://ollama.com/) and [Streamlit](https://streamlit.io/).
+
+### Folder reference
+
+| Path | Purpose |
+|---|---|
+| `data/raw_extracted_data.xlsx` | Sample raw review export used as input. |
+| `notebook/genAI_Customer_Intelligence.ipynb` | Notebook pipeline: reads the raw Excel sheet, generates a review summary, sentiment, one-word tag, and AI recommendation per row via Ollama + DistilBERT, and writes the summary CSV to `output/`. |
+| `src/Insight_Analyzer_App.py` | All-in-one Streamlit app — upload raw Excel data, run the same AI pipeline live, and explore the results in an interactive dashboard. No notebook required. |
+| `src/Dashboard.py` | Visualization-only Streamlit dashboard for data that has **already** been processed (e.g. the CSV produced by the notebook or `Insight_Analyzer_App.py`). |
+| `output/genAI_Customer_Reviews_Summaries.csv` | Generated summary/sentiment/tag/recommendation output from the pipeline. |
+| `requirements.txt` | Python dependencies for the notebook and both Streamlit apps. |
+
+### 1. Set up the environment
+
+```powershell
+python -m venv .venv
+.venv\Scripts\Activate.ps1
+pip install -r requirements.txt
 ```
 
-or
+Also install and start [Ollama](https://ollama.com/) locally, then pull the model used by the pipeline:
 
-```bash
-python app.py
+```powershell
+ollama pull llama3.2:1b
+ollama serve
 ```
+
+### 2. Option A — Run the notebook pipeline, then visualize
+
+1. Open `notebook/genAI_Customer_Intelligence.ipynb` and run all cells against your raw Excel file in `data/` (default: `raw_extracted_data.xlsx`, feedback in the `Detailed Feedback` column). This produces a summary CSV in `output/` (e.g. `genAI_Customer_Reviews_Summaries.csv`).
+2. Launch the visualization dashboard and upload that processed file:
+
+   ```powershell
+   streamlit run src/Dashboard.py
+   ```
+
+### 3. Option B — All-in-one app (no notebook needed)
+
+```powershell
+streamlit run src/Insight_Analyzer_App.py
+```
+
+- Upload your raw Excel file in the sidebar and pick the feedback column.
+- Click **Run Analysis** to generate summaries, sentiment, tags, and AI recommendations.
+- Explore Sentiment Distribution, Sentiment Over Time, Source Insights, Tag Insights, and Top Reviews tabs, plus an on-demand final comprehensive summary.
+- Download the processed results as CSV.
 
 ## 📈 Future Enhancements
 
