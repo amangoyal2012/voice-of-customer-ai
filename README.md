@@ -10,9 +10,10 @@ An AI-powered customer insight platform that leverages Generative AI and Large L
 - 😊 Sentiment Analysis (Positive, Neutral, Negative)
 - 📊 Automated Insight Generation
 - 🏷️ Topic & Keyword Extraction
+- 🤖 LLM-Based Summarization
 - 💡 AI-Powered Recommendations
 - 📈 Trend Analysis & Reporting
-- 🤖 LLM-Based Summarization
+
 
 ## 🏗️ Architecture
 
@@ -40,10 +41,8 @@ Customer Data
 - Frontend: React.js / Next.js
 - Backend: Node.js / Python
 - AI Framework: LangChain
-- LLM: OpenAI / Azure OpenAI / Ollama (Llama 3.1)
-- Database: MongoDB / PostgreSQL
+- LLM: OpenAI / Ollama (Llama 3.1)
 - Visualization: Chart.js / Power BI
-- Cloud: Azure
 
 ## 📂 Project Structure
 
